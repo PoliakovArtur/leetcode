@@ -1,0 +1,19 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+class Solution {
+    public int myAtoi(String s) {
+        s = s.strip();
+        Pattern pattern = Pattern.compile("^[-+]?0*[1-9]\\d*");
+        Matcher matcher = pattern.matcher(s);
+        if(matcher.find()) {
+            String match = matcher.group();
+            try{
+                return Integer.parseInt(match);
+            } catch(NumberFormatException ex) {
+                return match.charAt(0) == '-' ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+            }
+        }
+        return 0;
+    }
+}
