@@ -1,0 +1,17 @@
+class Solution {
+    public int reverse(int x) {
+        StringBuilder reverseInt = new StringBuilder();
+        int sign = x >= 0 ? 1 : -1;
+        x = sign * x;
+        while(x != 0) {
+            reverseInt.append(x % 10);
+            x /= 10;
+        }
+        try {
+        int result = Integer.parseInt(reverseInt.toString()) * sign;
+        return result;
+        }
+        catch(NumberFormatException ex) {}
+        return 0;
+    }
+}
