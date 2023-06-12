@@ -1,0 +1,39 @@
+class Solution {
+    public boolean isMatch(String text, String pattern) {
+        char[] tChars = text.toCharArray(), pChars = pattern.toCharArray();
+        return isMatch(tChars, pChars, 0, 0);
+    }
+
+    private boolean isMatch(char[] text, char[] pattern, int tIndex, int pIndex) {
+        int pLen = pattern.length, tLen = text.length;
+        List<Quantifier> quantifiers = new ArrayList<>();
+
+        while (pIndex < pLen) {
+            if(pIndex + 1 < pLen && pattern[pIndex + 1] == '*') {
+                int captStart = tIndex;
+                while (tIndex < tLen && isSymbolMatch(text[tIndex], pattern[pIndex])) tIndex++;
+                pIndex += 2;
+                quantifiers.add(new Quantifier(captStart, tIndex, pIndex - 2));
+            } else {
+                if(tIndex == tLen || !isSymbolMatch(text[tIndex], pattern[pIndex])) break;
+                pIndex++; tIndex++;
+            }
+        }
+        boolean isMatch = tIndex == tLen && pIndex == pLen;
+        if(!isMatch && pIndex != pLen) {
+           for(Quantifier q : quantifiers) {
+                int qNext = q.qIndex + 2;
+                if(qNext == pLen) break;
+                for(int i = q.captStart; i < q.captEnd; i++) {
+                    if(isMatch(text, pattern, i, qNext)) return true;
+                }
+            }
+        }
+        return isMatch;
+    }
+    private boolean isSymbolMatch(char tCh, char pCh) {
+        return  tCh == pCh || pCh == '.';
+    }
+
+    private record Quantifier(int captStart, int captEnd, int qIndex) {}
+}
