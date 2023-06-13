@@ -1,0 +1,28 @@
+class Solution {
+    public String intToRoman(int num) {
+        Map<Integer, String> numerals = Map.of(1, "I", 5, "V", 10, "X", 50, "L", 100, "C", 500, "D", 1000, "M");
+        if(numerals.containsKey(num)) return numerals.get(num);
+        StringBuilder roman = new StringBuilder();
+        int rank = 1;
+        while(num > 0) {
+            int digit = num % 10;
+            if(digit == 9) {
+                roman.append(numerals.get(rank * 10)).append(numerals.get(rank));
+            }
+            else {
+                if(digit == 4) {
+                    roman.append(numerals.get(rank * 5)).append(numerals.get(rank));
+                } else {
+                    boolean is5OrMore = digit >= 5;
+                    for(int i = 0; i < (is5OrMore ? digit - 5 : digit); i++) {
+                        roman.append(numerals.get(rank));
+                    }
+                    if(is5OrMore) roman.append(numerals.get(rank * 5));
+                }
+            }
+            rank *=10;
+            num /=10;
+        }
+        return roman.reverse().toString();
+    }
+}
